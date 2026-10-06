@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>お問い合わせ | モノとわたし</title>
+<meta name="description" content="「モノとわたし」へのお問い合わせフォームです。">
+<style>
+  body { font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans",sans-serif; max-width:640px; margin:0 auto; padding:32px 20px 80px; line-height:1.8; color:#222; }
+  h1 { font-size:1.6em; } label { display:block; font-weight:600; margin:1.2em 0 .3em; }
+  input, select, textarea { width:100%; box-sizing:border-box; font:inherit; padding:10px 12px; border:1px solid #cfd8d3; border-radius:10px; background:#fff; }
+  textarea { min-height:10em; resize:vertical; }
+  .hint { font-size:.85em; color:#667; margin:.3em 0 0; font-weight:400; }
+  button { margin-top:1.6em; width:100%; font:inherit; font-weight:700; color:#fff; background:#1f7a4d; border:0; border-radius:12px; padding:14px; cursor:pointer; }
+  button:disabled { opacity:.5; cursor:default; }
+  .trap { position:absolute; left:-9999px; width:1px; height:1px; overflow:hidden; }
+  .msg { margin-top:1.2em; padding:12px 16px; border-radius:10px; display:none; }
+  .ok { background:#f3faf6; border:1px solid #cfe9db; } .ng { background:#fff4e5; border:1px solid #f1d4a8; }
+  a { color:#1f7a4d; } .note { font-size:.85em; color:#667; margin-top:2em; }
+</style>
+</head>
+<body>
+<h1>お問い合わせ</h1>
+<p>「モノとわたし」へのお問い合わせは、こちらのフォームからお送りください。内容を確認のうえ、ご入力いただいた<strong>返信先のメールアドレス</strong>に、順次ご返信します。</p>
+
+<form id="form" novalidate>
+  <label for="category">種類 <span class="hint">（必須）</span></label>
+  <select id="category" required>
+    <option value="question">使い方の質問</option>
+    <option value="bug">不具合の報告</option>
+    <option value="feedback">ご意見・ご要望</option>
+    <option value="rights">権利者の方（削除・修正のご依頼）</option>
+    <option value="other">その他</option>
+  </select>
+
+  <label for="name">お名前 <span class="hint">（任意）</span></label>
+  <input id="name" type="text" maxlength="60" autocomplete="name">
+
+  <label for="email">返信先のメールアドレス <span class="hint">（必須）</span></label>
+  <input id="email" type="email" maxlength="254" autocomplete="email" required placeholder="you@example.com">
+  <p class="hint">ご返信のためだけに使います。</p>
+
+  <label for="message">お問い合わせの内容 <span class="hint">（必須・10〜2000文字）</span></label>
+  <textarea id="message" maxlength="2000" required></textarea>
+  <p class="hint">不具合の場合は、お使いの機種・iOSのバージョン・症状（いつ・どの画面で）をお書きください。パスワードは、お書きにならないでください。</p>
+
+  <!-- 罠の欄（人には見えない）。ボット対策 -->
+  <div class="trap" aria-hidden="true"><label>website <input id="website" type="text" tabindex="-1" autocomplete="off"></label></div>
+
+  <button id="send" type="submit">送信する</button>
+  <div id="ok" class="msg ok">送信しました。お問い合わせありがとうございます。内容を確認のうえ、返信先のメールアドレスにご連絡します。</div>
+  <div id="ng" class="msg ng"></div>
+</form>
+
+<p class="note">ご入力いただいた内容は、お問い合わせへの対応のためだけに使い、1年を過ぎたら削除します。詳しくは<a href="privacy.html">プライバシーポリシー</a>をご覧ください。</p>
+<p class="note"><a href="./">トップ</a> ・ <a href="support.html">サポート</a> ・ <a href="terms.html">利用規約</a> ・ <a href="tokushoho.html">特定商取引法に基づく表記</a></p>
+
+<script>
+const ENDPOINT = "https://jltcbvhpivupuauxrfqr.supabase.co/functions/v1/submit-contact";
+const form = document.getElementById("form"), ok = document.getElementById("ok"), ng = document.getElementById("ng"), send = document.getElementById("send");
+const ERRORS = {
+  invalid_email: "メールアドレスの形式を確認してください。",
+  message_too_short: "お問い合わせの内容は、10文字以上で入力してください。",
+  rate_limited: "短時間に、たくさん送信されました。しばらく時間をおいて、もう一度お試しください。",
+};
+form.addEventListener("submit", async (e) => {
+  e.preventDefault(); ok.style.display = ng.style.display = "none";
+  const email = document.getElementById("email").value.trim(), message = document.getElementById("message").value.trim();
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { ng.textContent = ERRORS.invalid_email; ng.style.display = "block"; return; }
+  if (message.length < 10) { ng.textContent = ERRORS.message_too_short; ng.style.display = "block"; return; }
+  send.disabled = true; send.textContent = "送信中…";
+  try {
+    const res = await fetch(ENDPOINT, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({
+      category: document.getElementById("category").value, name: document.getElementById("name").value.trim(),
+      reply_email: email, message, source: "web", website: document.getElementById("website").value }) });
+    const data = await res.json().catch(() => ({}));
+    if (res.ok && data.ok) { form.reset(); ok.style.display = "block"; }
+    else { ng.textContent = ERRORS[data.error] || "送信できませんでした。時間をおいて、もう一度お試しください。"; ng.style.display = "block"; }
+  } catch (_) { ng.textContent = "通信に失敗しました。ネットワークを確認して、もう一度お試しください。"; ng.style.display = "block"; }
+  send.disabled = false; send.textContent = "送信する";
+});
+</script>
+</body>
+</html>
