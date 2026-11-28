@@ -18,93 +18,210 @@
 <link rel="icon" type="image/png" sizes="64x64" href="images/favicon.png">
 <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
 <style>
-  :root { --green:#30b77b; --green-bg:#f1fbf6; --green-soft:#e3f5ec; --line:#e3ece7; --text:#222; --sub:#667; }
-  * { box-sizing: border-box; }
-  body { font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans",sans-serif; margin:0; color:var(--text); line-height:1.8; background:#fff; }
-  .wrap { max-width:760px; margin:0 auto; padding:0 20px; }
-  header.hero { background:linear-gradient(180deg,var(--green-bg),#fff); padding:56px 0 40px; text-align:center; }
-  .brand { font-size:1.05em; letter-spacing:.08em; font-weight:600; }
-  h1 { font-size:1.9em; line-height:1.4; margin:.4em 0 .3em; }
+  :root { --green:#30b77b; --green-bg:#f1fbf6; --green-soft:#e3f5ec; --line:#dcebe3; --text:#222; --sub:#555f66; --yellow:#fbd746; --shadow:0 2px 6px rgba(30,100,70,.06),0 14px 34px rgba(30,100,70,.10); color-scheme:light; }
+  * { box-sizing:border-box; }
+  body { font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans",sans-serif; margin:0; color:var(--text); line-height:1.85; background:#fff; overflow-wrap:anywhere; }
+  :lang(ja) p, :lang(ja) li { word-break:auto-phrase; }
+  .wrap { max-width:960px; margin:0 auto; padding:0 20px; }
+  .narrow { max-width:760px; }
   .nw { display:inline-block; }
-  .mascot { display:block; width:96px; height:96px; border-radius:24px; margin:0 auto 12px; }
-  .screens { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; max-width:560px; margin:0 auto; }
-  figure { margin:0; }
-  figure img { display:block; width:100%; height:auto; border:1px solid var(--line); border-radius:22px; }
-  figcaption { font-size:.85em; line-height:1.7; text-align:center; margin-top:8px; }
-  .lead { color:var(--sub); max-width:30em; margin:0 auto 1.4em; }
-  .badge { display:inline-block; border:2px solid var(--green); background:#fff; border-radius:99px; padding:6px 18px; font-size:.92em; }
-  section { padding:34px 0; }
-  h2 { font-size:1.3em; margin:0 0 .8em; }
-  .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:14px; }
-  .card { border:1px solid var(--line); border-radius:14px; padding:14px 18px; background:#fff; }
-  .card b { border-bottom:3px solid var(--green); }
-  .chips { display:flex; flex-wrap:wrap; gap:8px; }
-  .chip { background:var(--green-soft); border-radius:99px; padding:3px 14px; font-size:.92em; }
-  .plan { border:2px solid var(--green); border-radius:16px; padding:16px 22px; background:var(--green-bg); }
-  .plan .price { font-size:1.5em; font-weight:700; }
-  .plan h3 { font-size:1em; margin:1em 0 .2em; }
-  .plan ul { margin:0; }
-  ul { padding-left:1.2em; }
-  details { border-bottom:1px solid var(--line); padding:10px 0; }
-  summary { cursor:pointer; font-weight:600; }
-  details p { margin:.5em 0 0; color:#444; }
+  h1,h2,h3,h4 { line-height:1.5; }
+  h2 { font-size:clamp(1.45rem,1.2rem + 1.2vw,2rem); margin:0 0 .8em; text-align:center; }
+  h2::after { content:""; display:block; width:44px; height:5px; border-radius:99px; background:var(--green); margin:10px auto 0; }
   a { color:var(--text); text-decoration:underline; text-decoration-color:var(--green); text-decoration-thickness:2px; text-underline-offset:3px; }
-  footer { border-top:1px solid var(--line); padding:26px 0 60px; font-size:.88em; color:var(--sub); text-align:center; }
-  footer a { margin:0 8px; }
-  .note { font-size:.85em; color:var(--sub); }
+  section { padding:60px 0; }
+  .tint { background:var(--green-bg); }
+
+  .mono { display:block; height:auto; }
+  .bubble { position:relative; margin:0; background:#fff; border:2px solid var(--green); border-radius:22px; padding:12px 18px; font-weight:700; line-height:1.7; text-align:center; box-shadow:var(--shadow); }
+  .bubble::after { content:""; position:absolute; width:14px; height:14px; background:#fff; border:solid var(--green); border-width:0 2px 2px 0; left:50%; bottom:-9px; margin-left:-7px; transform:rotate(45deg); }
+
+  header.hero { background:linear-gradient(180deg,var(--green-soft),var(--green-bg)); border-radius:0 0 36px 36px; padding:28px 0 44px; overflow:hidden; }
+  .hero-in { display:grid; gap:20px; text-align:center; }
+  .brand { font-size:1.05rem; letter-spacing:.1em; font-weight:700; }
+  h1 { font-size:clamp(1.65rem,1rem + 3vw,3rem); margin:.35em 0 .45em; }
+  .lead { color:var(--sub); max-width:30em; margin:0 auto 1.5em; text-align:left; }
+  .badge { display:inline-block; border:2px solid var(--green); background:#fff; border-radius:99px; padding:8px 22px; font-weight:600; font-size:.95rem; box-shadow:var(--shadow); }
+  .hero-guide { order:-1; display:flex; flex-direction:column; align-items:center; gap:6px; }
+  .hero-guide .mono { width:min(190px,52vw); }
+  .hero-guide .bubble { font-size:.95rem; }
+
+  .steps { list-style:none; margin:0; padding:0; display:grid; gap:52px; }
+  .step { display:grid; gap:2px; min-width:0; }
+  .guide { display:flex; flex-direction:row-reverse; align-items:center; justify-content:center; gap:14px; }
+  .guide .mono { width:clamp(76px,24vw,104px); flex:none; }
+  .guide .bubble { flex:0 1 auto; text-align:left; font-size:.92rem; padding:12px 14px; }
+  .guide .bubble::after { left:auto; margin:-7px 0 0; top:50%; bottom:auto; right:auto; left:-9px; transform:rotate(135deg); }
+  .card { background:#fff; border:1px solid var(--line); border-radius:22px; padding:22px 20px; box-shadow:var(--shadow); min-width:0; }
+  .card h3 { display:flex; align-items:center; gap:12px; margin:0 0 .6em; font-size:1.2rem; }
+  .card p { margin:0; }
+  .leaf { flex:none; display:grid; place-items:center; width:36px; height:36px; background:var(--yellow); border-radius:50% 4px 50% 4px; font-size:1rem; font-weight:700; }
+  h4 { margin:1.4em 0 .8em; font-size:1rem; text-align:center; }
+  .screens { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; max-width:520px; margin:0 auto; }
+  figure { margin:0; }
+  figure img { display:block; width:100%; height:auto; border:1px solid var(--line); border-radius:18px; box-shadow:var(--shadow); }
+  figcaption { font-size:.82rem; line-height:1.7; text-align:center; margin-top:10px; }
+
+  .chips { display:flex; flex-wrap:wrap; justify-content:center; gap:10px; }
+  .chip { background:#fff; border:2px solid var(--green); border-radius:99px; padding:5px 18px; font-weight:600; font-size:.95rem; }
+
+  .section-guide { flex-direction:row; margin:0 auto 22px; }
+  .section-guide .bubble::after { left:auto; right:-9px; transform:rotate(-45deg); }
+  .free { text-align:center; margin:0 0 20px; }
+  .plan { border:2px solid var(--green); border-radius:26px; padding:24px 20px; background:#fff; box-shadow:var(--shadow); }
+  .plan-top { text-align:center; padding-bottom:18px; border-bottom:1px solid var(--line); }
+  .plan .price { font-size:clamp(1.8rem,1.4rem + 2vw,2.5rem); font-weight:800; line-height:1.5; }
+  .perks { display:grid; gap:12px; margin-top:18px; }
+  .perks > div { background:var(--green-bg); border-radius:16px; padding:14px 16px; }
+  .plan h3 { font-size:1rem; margin:0 0 .4em; }
+  .plan ul { margin:0; padding-left:1.2em; }
+  .plan li + li { margin-top:6px; }
+  .note { font-size:.86rem; color:var(--sub); }
+
+  details { background:#fff; border:1px solid var(--line); border-radius:16px; margin-top:10px; }
+  summary { cursor:pointer; font-weight:600; padding:14px 18px; display:flex; justify-content:space-between; align-items:center; gap:12px; list-style:none; }
+  summary::-webkit-details-marker { display:none; }
+  summary::after { content:"＋"; flex:none; font-weight:700; }
+  details[open] summary::after { content:"−"; }
+  details p { margin:0; padding:0 18px 16px; color:#444; }
+  summary:focus-visible, a:focus-visible { outline:3px solid var(--green); outline-offset:2px; border-radius:6px; }
+
+  #contact { text-align:center; }
+  #contact .mono { width:120px; margin:0 auto 8px; }
+  footer { border-top:1px solid var(--line); padding:26px 0 60px; font-size:.88rem; color:var(--sub); text-align:center; }
+  footer a { display:inline-block; margin:2px 8px; }
+
+  @media (min-width:700px) {
+    .perks { grid-template-columns:repeat(3,minmax(0,1fr)); }
+    .plan { padding:30px 28px; }
+    .step { grid-template-columns:220px minmax(0,1fr); gap:32px; align-items:center; }
+    .step .guide { flex-direction:column; gap:16px; }
+    .step .guide .mono { width:180px; }
+    .step .guide .bubble { text-align:center; }
+    .step .guide .bubble::after { top:auto; bottom:-9px; left:50%; margin:0 0 0 -7px; transform:rotate(45deg); }
+    .step:nth-child(even) { grid-template-columns:minmax(0,1fr) 220px; }
+    .step:nth-child(even) .guide { order:2; }
+    .card { padding:28px 32px; }
+  }
+  @media (min-width:860px) {
+    header.hero { padding:56px 0 64px; }
+    .hero-in { grid-template-columns:minmax(0,1.6fr) minmax(0,1fr); align-items:center; gap:32px; text-align:left; }
+    .lead { margin-left:0; }
+    h1 { font-size:clamp(2.1rem,3.7vw,2.5rem); }
+    .hero-guide { order:0; gap:14px; }
+    .hero-guide .mono { width:300px; }
+    .hero-guide .bubble { font-size:1.1rem; padding:14px 24px; }
+  }
+
+  @media (prefers-reduced-motion:no-preference) {
+    .hero-guide .mono { animation:breathe 4.4s ease-in-out infinite; transform-origin:50% 92%; }
+    .js .reveal .bubble, .js .reveal .mono { opacity:0; }
+    .js .reveal.in .mono { animation:hop .6s cubic-bezier(.3,1.5,.5,1) both; }
+    .js .reveal.in .bubble { animation:pop .45s .22s cubic-bezier(.3,1.4,.5,1) both; }
+  }
+  @keyframes breathe { 0%,100% { transform:scale(1,1); } 50% { transform:scale(.985,1.02); } }
+  @keyframes hop { from { opacity:0; transform:translateY(18px) scale(.94); } to { opacity:1; transform:none; } }
+  @keyframes pop { from { opacity:0; transform:scale(.9); } to { opacity:1; transform:none; } }
+  @media print { .js .reveal .bubble, .js .reveal .mono { opacity:1 !important; animation:none !important; } }
 </style>
 </head>
 <body>
-<header class="hero"><div class="wrap">
-  <img class="mascot" src="images/character.jpg" width="320" height="320" alt="モノとわたしのキャラクター">
+<header class="hero"><div class="wrap hero-in">
+  <div>
   <div class="brand">モノとわたし</div>
   <h1>成分表を撮るだけ。<br><span class="nw">化粧品の成分が、</span><span class="nw">ひと目で。</span></h1>
-  <p class="lead">化粧品の成分表を撮影すると、薬用の有効成分・うれしい成分・気をつけたい成分に分けて解説します。美容・健康・暮らしの記事（動画つき）も毎日追加。</p>
+  <p class="lead">化粧品の成分表を撮影すると、薬用の有効成分・うれしい成分・<span class="nw">気をつけたい</span>成分に分けて解説します。美容・健康・暮らしの記事（動画つき）も毎日追加。</p>
   <span class="badge">App Store で公開準備中</span>
+  </div>
+  <div class="hero-guide">
+    <p class="bubble"><span class="nw">こんにちは！</span><span class="nw">アプリの中を、</span><span class="nw">順にご案内します。</span></p>
+    <img class="mono" src="images/mono-excited.webp" width="566" height="716" alt="モノとわたしのキャラクター">
+  </div>
 </div></header>
 
-<main class="wrap">
-<section>
-  <h2>成分チェックの画面</h2>
-  <div class="screens">
-    <figure><img src="images/screen-check.jpg" width="640" height="987" alt="成分チェックの最初の画面。成分名の検索欄と「成分表を撮る」ボタンがある"><figcaption>撮るか、<span class="nw">手で入力します</span></figcaption></figure>
-    <figure><img src="images/screen-result.jpg" width="640" height="987" alt="解析結果の例。全11成分のうち、うれしい成分が5、気をつけたい成分が2と表示されている"><figcaption>結果の例<span class="nw">（架空の成分表）</span></figcaption></figure>
-  </div>
-</section>
-
-<section>
+<main>
+<section><div class="wrap">
   <h2>こんなアプリです</h2>
-  <div class="grid">
-    <div class="card"><b>成分チェック</b><br>成分表を撮影するだけ。薬用の有効成分、うれしい成分、気をつけたい成分を分けて表示し、成分ごとの働きも解説します（あくまで目安です）。</div>
-    <div class="card"><b>マイ肌と、重ね使いの目安</b><br>乾燥・敏感などの悩みを選ぶと、あなたの肌に合いそうな成分と気をつけたい成分の目安が出ます。レチノール・酸・ビタミンCなど、組み合わせに気をつけたい成分もお知らせ（選んだ内容は端末の中だけに保存）。</div>
-    <div class="card"><b>マイコスメ</b><br>製品の成分表を、名前をつけて保存。製品どうしの重ね使いも確認できます。美容の記事の下では、出てきた成分をタップして解説を見られます。</div>
-    <div class="card"><b>動画と記事で、すぐわかる</b><br>元の動画と、要点のまとめを一緒に表示。長い動画を見なくても、ポイントを短時間で確認できます。</div>
-    <div class="card"><b>買い物メモに、ワンタップ</b><br>記事に出てくる道具や消耗品を、買い物メモに追加。店舗を登録すると、近くに来たときにお知らせします（任意）。</div>
-    <div class="card"><b>探しやすい</b><br>カテゴリ・ランキング・タグ・キーワード検索、天気に合わせたおすすめで、今ほしい記事に届きます。</div>
+  <ol class="steps">
+  <li class="step">
+    <div class="guide"><p class="bubble"><span class="nw">この成分、</span><span class="nw">大丈夫かな？</span><span class="nw">撮って、</span><span class="nw">たしかめます。</span></p><img class="mono" src="images/mono-thinking.webp" width="566" height="716" alt="" loading="lazy"></div>
+    <div class="card">
+      <h3><span class="leaf" aria-hidden="true">1</span><span>成分チェック</span></h3>
+      <p>成分表を撮影するだけ。薬用の有効成分、うれしい成分、<span class="nw">気をつけたい</span>成分を分けて表示し、成分ごとの働きも解説します（あくまで目安です）。</p>
+      <h4>成分チェックの画面</h4>
+      <div class="screens">
+    <figure><img src="images/screen-check.jpg" width="640" height="987" loading="lazy" alt="成分チェックの最初の画面。成分名の検索欄と「成分表を撮る」ボタンがある"><figcaption>撮るか、<span class="nw">手で入力します</span></figcaption></figure>
+    <figure><img src="images/screen-result.jpg" width="640" height="987" loading="lazy" alt="解析結果の例。全11成分のうち、うれしい成分が5、気をつけたい成分が2と表示されている"><figcaption>結果の例<span class="nw">（架空の成分表）</span></figcaption></figure>
   </div>
-</section>
 
-<section>
+    </div>
+  </li>
+  <li class="step">
+    <div class="guide"><p class="bubble"><span class="nw">悩みを選ぶと、</span><span class="nw">成分の目安が</span><span class="nw">出ます。</span></p><img class="mono" src="images/mono-normal.webp" width="566" height="716" alt="" loading="lazy"></div>
+    <div class="card">
+      <h3><span class="leaf" aria-hidden="true">2</span><span><span class="nw">マイ肌と、</span><span class="nw">重ね使いの目安</span></span></h3>
+      <p>乾燥・敏感などの悩みを選ぶと、あなたの肌に合いそうな成分と<span class="nw">気をつけたい</span>成分の目安が出ます。レチノール・酸・ビタミンCなど、組み合わせに<span class="nw">気をつけたい</span>成分もお知らせ（選んだ内容は端末の中だけに保存）。</p>
+    </div>
+  </li>
+  <li class="step">
+    <div class="guide"><p class="bubble"><span class="nw">成分表は、</span><span class="nw">名前をつけて</span><span class="nw">保存できます。</span></p><img class="mono" src="images/mono-love.webp" width="566" height="716" alt="" loading="lazy"></div>
+    <div class="card">
+      <h3><span class="leaf" aria-hidden="true">3</span><span>マイコスメ</span></h3>
+      <p>製品の成分表を、名前をつけて保存。製品どうしの重ね使いも確認できます。美容の記事の下では、出てきた成分をタップして解説を見られます。</p>
+    </div>
+  </li>
+  <li class="step">
+    <div class="guide"><p class="bubble"><span class="nw">動画と要点を、</span><span class="nw">いっしょに</span><span class="nw">見られます。</span></p><img class="mono" src="images/mono-excited.webp" width="566" height="716" alt="" loading="lazy"></div>
+    <div class="card">
+      <h3><span class="leaf" aria-hidden="true">4</span><span><span class="nw">動画と記事で、</span><span class="nw">すぐわかる</span></span></h3>
+      <p>元の動画と、要点のまとめを一緒に表示。長い動画を見なくても、ポイントを短時間で確認できます。</p>
+    </div>
+  </li>
+  <li class="step">
+    <div class="guide"><p class="bubble"><span class="nw">記事の道具は、</span><span class="nw">買い物メモに</span><span class="nw">ワンタップで。</span></p><img class="mono" src="images/mono-happy.webp" width="566" height="716" alt="" loading="lazy"></div>
+    <div class="card">
+      <h3><span class="leaf" aria-hidden="true">5</span><span><span class="nw">買い物メモに、</span><span class="nw">ワンタップ</span></span></h3>
+      <p>記事に出てくる道具や消耗品を、買い物メモに追加。店舗を登録すると、近くに来たときにお知らせします（任意）。</p>
+    </div>
+  </li>
+  <li class="step">
+    <div class="guide"><p class="bubble"><span class="nw">天気に合わせた</span><span class="nw">おすすめも</span><span class="nw">あります。</span></p><img class="mono" src="images/mono-thinking.webp" width="566" height="716" alt="" loading="lazy"></div>
+    <div class="card">
+      <h3><span class="leaf" aria-hidden="true">6</span><span>探しやすい</span></h3>
+      <p>カテゴリ・ランキング・タグ・キーワード検索、天気に合わせたおすすめで、今ほしい記事に届きます。</p>
+    </div>
+  </li>
+  </ol>
+</div></section>
+
+<section class="tint"><div class="wrap narrow">
   <h2>10のカテゴリ</h2>
   <div class="chips">
     <span class="chip">掃除・洗濯</span><span class="chip">収納・整理</span><span class="chip">料理</span><span class="chip">健康</span><span class="chip">お金</span>
     <span class="chip">美容</span><span class="chip">ファッション</span><span class="chip">アウトドア</span><span class="chip">ペット</span><span class="chip">暮らしの知恵</span>
   </div>
-</section>
+</div></section>
 
-<section>
+<section><div class="wrap">
   <h2>料金</h2>
-  <p>記事を読む・保存する・買い物メモを使うなど、基本の機能は無料です。</p>
+  <div class="guide section-guide"><p class="bubble"><span class="nw">ここからは、</span><span class="nw">料金の</span><span class="nw">ご案内です。</span></p><img class="mono" src="images/mono-happy.webp" width="566" height="716" alt="" loading="lazy"></div>
+  <p class="free">記事を読む・保存する・買い物メモを使うなど、基本の機能は無料です。</p>
   <div class="plan">
-    <div><b>プレミアム会員</b>（月額・自動更新）</div>
-    <div class="price">月額300円（税込）</div>
-    <div>初めての方は<b>3日間無料</b>でお試しいただけます。</div>
+    <div class="plan-top">
+    <div><b>プレミアム会員</b><span class="nw">（月額・自動更新）</span></div>
+    <div class="price"><span class="nw">月額300円</span><span class="nw">（税込）</span></div>
+    <div><span class="nw">初めての方は<b>3日間無料</b>で</span><span class="nw">お試しいただけます。</span></div>
+    </div>
+    <div class="perks">
+    <div>
     <h3>くらべて、深く調べる</h3>
     <ul>
       <li>成分表の比較（違う成分・共通の成分）</li>
       <li>製品どうしの重ね使いの確認</li>
       <li>解析の履歴を50件まで（無料は10件）</li>
     </ul>
+    </div>
+    <div>
     <h3>ためて、続ける</h3>
     <ul>
       <li>マイコスメの保存を30件まで（無料は3件）、使用期限のお知らせ</li>
@@ -113,6 +230,8 @@
       <li>お気に入りを整理するコレクション</li>
       <li>週ごとの振り返りレポート</li>
     </ul>
+    </div>
+    <div>
     <h3>楽しむ・ひろげる</h3>
     <ul>
       <li>おうちのカスタム（じかん・きせかえ・なかま。レベルに応じて増えます）</li>
@@ -120,31 +239,48 @@
       <li>ボーナスポイントが2倍</li>
       <li>投稿は1日5件まで（無料は1件）、コメントし放題（無料は1日1件）、画像つきの投稿</li>
     </ul>
+    </div>
+    </div>
     <p class="note">解約はiPhoneの「設定」＞（ご自身の名前）＞「サブスクリプション」からいつでもできます。無料体験は、期間が終わる24時間前までに解約しないと、自動的に月額プランに移ります。詳しくは<a href="tokushoho.html">特定商取引法に基づく表記</a>をご覧ください。</p>
   </div>
-</section>
+</div></section>
 
-<section id="faq">
+<section id="faq" class="tint"><div class="wrap narrow">
   <h2>よくある質問</h2>
-  <details><summary>どの端末で使えますか？</summary><p>iPhone（iOS 17以降）で使えます。iPadには対応していません。</p></details>
-  <details><summary>記事はどうやって作られていますか？</summary><p>運営者が、YouTubeの動画の内容を、AIの支援で要約・整理して作成しています。内容の正確さには努めていますが、詳しくは元の動画をご確認ください。動画の権利は、各権利者に帰属します。</p></details>
-  <details><summary>広告はありますか？</summary><p>買い物メモの商品検索リンクには、アフィリエイト（広告）を含むものがあります。リンクの近くに、その旨を表示しています。</p></details>
-  <details><summary>健康やお金の記事は、信頼してよいですか？</summary><p>一般的な情報の紹介であり、医療・投資などの専門的な助言ではありません。体調に不安があるときは医師などの専門家に、お金のことはご自身の責任でご判断ください。</p></details>
-  <details><summary>アカウントを削除したいです</summary><p>アプリの「マイページ」＞「プロフィール編集」から、ご自身で削除できます。投稿した記事や画像、コメントなども削除されます。詳しくは<a href="privacy.html">プライバシーポリシー</a>をご覧ください。</p></details>
-  <details><summary>不適切な投稿を見つけました</summary><p>ほかの利用者が投稿した記事は、記事の画面の右上のメニュー（旗のアイコン）から、「通報する」「投稿者をミュート」「投稿者をブロック」ができます。コメントは、コメントの「…」から通報やブロックができます。運営が確認し、不適切な投稿は非表示・削除します。そのほかのお困りごとは、<a href="contact.html">お問い合わせフォーム</a>からご連絡ください。</p></details>
-  <details><summary>動画や記事の削除・修正をお願いしたい（権利者の方）</summary><p>下記の<a href="contact.html">お問い合わせフォーム</a>から、ご連絡ください。内容を確認のうえ、速やかに対応します。</p></details>
-</section>
+  <div class="guide section-guide"><p class="bubble"><span class="nw">気になることは、</span><span class="nw">こちらを</span><span class="nw">どうぞ。</span></p><img class="mono" src="images/mono-normal.webp" width="566" height="716" alt="" loading="lazy"></div>
+  <details><summary><span><span class="nw">どの端末で</span><span class="nw">使えますか？</span></span></summary><p>iPhone（iOS 17以降）で使えます。iPadには対応していません。</p></details>
+  <details><summary><span><span class="nw">記事はどうやって</span><span class="nw">作られていますか？</span></span></summary><p>運営者が、YouTubeの動画の内容を、AIの支援で要約・整理して作成しています。内容の正確さには努めていますが、詳しくは元の動画をご確認ください。動画の権利は、各権利者に帰属します。</p></details>
+  <details><summary><span><span class="nw">広告は</span><span class="nw">ありますか？</span></span></summary><p>買い物メモの商品検索リンクには、アフィリエイト（広告）を含むものがあります。リンクの近くに、その旨を表示しています。</p></details>
+  <details><summary><span><span class="nw">健康やお金の記事は、</span><span class="nw">信頼してよいですか？</span></span></summary><p>一般的な情報の紹介であり、医療・投資などの専門的な助言ではありません。体調に不安があるときは医師などの専門家に、お金のことはご自身の責任でご判断ください。</p></details>
+  <details><summary><span><span class="nw">アカウントを</span><span class="nw">削除したいです</span></span></summary><p>アプリの「マイページ」＞「プロフィール編集」から、ご自身で削除できます。投稿した記事や画像、コメントなども削除されます。詳しくは<a href="privacy.html">プライバシーポリシー</a>をご覧ください。</p></details>
+  <details><summary><span><span class="nw">不適切な投稿を</span><span class="nw">見つけました</span></span></summary><p>ほかの利用者が投稿した記事は、記事の画面の右上のメニュー（旗のアイコン）から、「通報する」「投稿者をミュート」「投稿者をブロック」ができます。コメントは、コメントの「…」から通報やブロックができます。運営が確認し、不適切な投稿は非表示・削除します。そのほかのお困りごとは、<a href="contact.html">お問い合わせフォーム</a>からご連絡ください。</p></details>
+  <details><summary><span><span class="nw">動画や記事の</span><span class="nw">削除・修正を</span><span class="nw">お願いしたい</span><span class="nw">（権利者の方）</span></span></summary><p>下記の<a href="contact.html">お問い合わせフォーム</a>から、ご連絡ください。内容を確認のうえ、速やかに対応します。</p></details>
+</div></section>
 
-<section id="contact">
+<section id="contact"><div class="wrap narrow">
+  <img class="mono" src="images/mono-happy.webp" width="566" height="716" alt="" loading="lazy">
   <h2>お問い合わせ</h2>
   <p><a href="contact.html">お問い合わせフォーム</a>（返信先のメールアドレスの入力が必要です）<br>
   <span class="note">サポートの詳細は<a href="support.html">サポートページ</a>をご覧ください。</span></p>
-</section>
+</div></section>
 </main>
 
 <footer><div class="wrap">
   <a href="privacy.html">プライバシーポリシー</a> ・ <a href="terms.html">利用規約</a> ・ <a href="tokushoho.html">特定商取引法に基づく表記</a> ・ <a href="support.html">サポート</a>
   <p>© モノとわたし</p>
 </div></footer>
+<script>
+(function () {
+  if (!('IntersectionObserver' in window) || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  var targets = document.querySelectorAll('.step, .section-guide');
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+    });
+  }, { rootMargin: '0px 0px -8% 0px' });
+  targets.forEach(function (t) { t.classList.add('reveal'); io.observe(t); });
+  document.documentElement.classList.add('js');
+})();
+</script>
 </body>
 </html>
